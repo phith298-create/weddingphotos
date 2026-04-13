@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Ảnh Cưới - Hoàng Phi & Thanh Hà</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F8F7F5;
+            --surface: #FFFFFF;
+            --accent: #C4A882;
+            --accent-hover: #B39570;
+            --accent-light: #F0E8DD;
+            --text: #1A1A1A;
+            --text-secondary: #8C8C8C;
+            --border: #E5E1DC;
+            --shadow: 0 2px 20px rgba(0,0,0,0.06);
+            --radius: 12px;
+            --font-heading: 'Cormorant Garamond', 'Georgia', serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           SCREENS (Landing, Category, Gallery)
+           ============================================ */
+        .screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            text-align: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+            display: none;
+        }
+
+        .landing-ornament {
+            font-size: 32px;
+            color: var(--accent);
+            margin-bottom: 16px;
+            letter-spacing: 12px;
+        }
+
+        .couple-names {
+            font-family: var(--font-heading);
+            font-size: clamp(36px, 8vw, 64px);
+            font-weight: 300;
+            color: var(--text);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .couple-names .amp {
+            font-style: italic;
+            color: var(--accent);
+            margin: 0 8px;
+        }
+
+        .wedding-date {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--text-secondary);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 48px;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: var(--accent);
+            margin: 0 auto 40px;
+        }
+
+        .select-prompt {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 32px;
+        }
+
+        /* Cards Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            max-width: 720px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .card:active { transform: translateY(0); }
+
+        .card-label {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        /* Category screen - larger cards */
+        .card-grid-category {
+            grid-template-columns: repeat(2, minmax(200px, 280px));
+            justify-content: center;
+        }
+
+        .card-grid-category .card {
+            padding: 40px 24px;
+        }
+
+        .card-grid-category .card-label {
+            font-size: 24px;
+        }
+
+        /* Back link on category screen */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            margin-bottom: 32px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            font-family: var(--font-body);
+        }
+
+        .back-link:hover {
+            color: var(--text);
+            background: var(--accent-light);
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ============================================
+           GALLERY SCREEN
+           ============================================ */
+        #gallery {
+            display: none;
+            min-height: 100vh;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #gallery.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        .gallery-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(248, 247, 245, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--text);
+            background: var(--accent-light);
+        }
+
+        .back-btn svg { width: 18px; height: 18px; }
+
+        .gallery-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+
+        .photo-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        .gallery-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        .folder-section { margin-bottom: 48px; }
+
+        .folder-heading {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Photo Grid - Masonry */
+        .photo-grid {
+            columns: 4;
+            column-gap: 12px;
+        }
+
+        .photo-item {
+            break-inside: avoid;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            background: var(--border);
+        }
+
+        .photo-item img {
+            width: 100%;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.3s ease;
+        }
+
+        .photo-item img.loaded { opacity: 1; }
+        .photo-item:hover img { transform: scale(1.03); }
+
+        /* Loading & Error */
+        .loading-container {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 60px 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .error-container h3 {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+
+        .error-container p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           LIGHTBOX
+           ============================================ */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.92);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        #lightbox.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-img.loaded { opacity: 1; }
+
+        .lightbox-spinner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 32px;
+            cursor: pointer;
+            padding: 8px;
+            line-height: 1;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+
+        .lightbox-close:hover { color: #fff; }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 16px 12px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .lightbox-prev { left: 16px; }
+        .lightbox-next { right: 16px; }
+
+        /* Lightbox bottom bar: counter + download */
+        .lightbox-bottom {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .lightbox-counter {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        .lightbox-download {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.85);
+            font-family: var(--font-body);
+            font-size: 13px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .lightbox-download:hover {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+
+        .lightbox-download svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* ============================================
+           SETUP SCREENS
+           ============================================ */
+        .setup-screen {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .setup-screen h2 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            margin-bottom: 16px;
+        }
+
+        .setup-screen p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .setup-screen ol {
+            text-align: left;
+            margin: 24px 0;
+            padding-left: 24px;
+        }
+
+        .setup-screen li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .setup-screen a { color: var(--accent-hover); text-decoration: none; }
+        .setup-screen a:hover { text-decoration: underline; }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 1024px) {
+            .photo-grid { columns: 3; }
+        }
+
+        @media (max-width: 768px) {
+            .photo-grid { columns: 2; }
+            .card-grid { max-width: 460px; }
+            .card-grid-category { grid-template-columns: 1fr 1fr; }
+            .gallery-header { padding: 12px 16px; }
+            .gallery-content { padding: 24px 16px 40px; }
+            .lightbox-nav { display: none; }
+        }
+
+        @media (max-width: 480px) {
+            .card-grid { grid-template-columns: 1fr; max-width: 320px; }
+            .card-grid-category { grid-template-columns: 1fr; }
+            .gallery-title { font-size: 16px; }
+            .photo-grid { column-gap: 8px; }
+            .photo-item { margin-bottom: 8px; }
+        }
+
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+    </style>
+</head>
+<body>
+
+    <!-- ============================================
+         BƯỚC 1: CHỌN ĐỐI TƯỢNG
+         ============================================ -->
+    <div id="step-role" class="screen">
+        <div class="landing-ornament">&#10043;</div>
+        <h1 class="couple-names fade-in-up">
+            Hoàng Phi <span class="amp">&amp;</span> Thanh Hà
+        </h1>
+        <p class="wedding-date fade-in-up delay-1">27 . 03 . 2026</p>
+        <div class="divider fade-in-up delay-2"></div>
+        <p class="select-prompt fade-in-up delay-3">Bạn là khách của...?</p>
+        <div class="card-grid fade-in-up delay-4" id="roleGrid"></div>
+    </div>
+
+    <!-- ============================================
+         BƯỚC 2: CHỌN LOẠI ẢNH
+         ============================================ -->
+    <div id="step-category" class="screen hidden">
+        <button class="back-link" onclick="goBackToRole()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Quay lại
+        </button>
+        <div class="landing-ornament">&#10043;</div>
+        <p class="select-prompt" id="categoryPrompt">Bạn muốn xem ảnh gì?</p>
+        <div class="card-grid card-grid-category" id="categoryGrid"></div>
+    </div>
+
+    <!-- ============================================
+         BƯỚC 3: XEM ẢNH
+         ============================================ -->
+    <div id="gallery">
+        <header class="gallery-header">
+            <button class="back-btn" onclick="goBackToCategory()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Quay lại
+            </button>
+            <span class="gallery-title" id="galleryTitle">Album Ảnh Cưới</span>
+            <span class="photo-count" id="photoCount"></span>
+        </header>
+        <div class="gallery-content" id="galleryContent"></div>
+    </div>
+
+    <!-- ============================================
+         LIGHTBOX
+         ============================================ -->
+    <div id="lightbox" onclick="closeLightbox(event)">
+        <div class="lightbox-spinner" id="lightboxSpinner"></div>
+        <img class="lightbox-img" id="lightboxImg" alt="">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); navigateLightbox(-1)">&#8249;</button>
+        <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); navigateLightbox(1)">&#8250;</button>
+        <div class="lightbox-bottom">
+            <span class="lightbox-counter" id="lightboxCounter"></span>
+            <a class="lightbox-download" id="lightboxDownload" href="#" target="_blank" onclick="event.stopPropagation();">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Tải về
+            </a>
+        </div>
+    </div>
+
+    <script>
+    // ============================================
+    // CẤU HÌNH - CHỈNH SỬA TẠI ĐÂY
+    // ============================================
+    const CONFIG = {
+        groomName: 'Hoàng Phi',
+        brideName: 'Thanh Hà',
+        weddingDate: '27 . 03 . 2026',
+
+        apiKey: 'AIzaSyAG72nUgO8OJ0RXTtw2xtPXDJwXIAShJ_4',
+
+        // ---- 7 thư mục Google Drive ----
+        folders: {
+            'le-chung': {
+                name: 'Lễ Vu Quy & Thành Hôn (Chung)',
+                id: '17W0yJmKvWp_jT9oG0UNlL0iWc4ES6MUA'
+            },
+            'le-hoang-phi': {
+                name: 'Lễ Vu Quy & Thành Hôn (GĐ Hoàng Phi)',
+                id: '1SIVRLa0BG5SavH9jHEuJqUzJMdC6sdhr'
+            },
+            'le-thanh-ha': {
+                name: 'Lễ Vu Quy & Thành Hôn (GĐ Thanh Hà)',
+                id: '15A7sSpg8ykvWWhkQMF-6bWyruk09vwJ0'
+            },
+            'tiec-hoang-phi': {
+                name: 'Tiệc Cưới (GĐ Hoàng Phi)',
+                id: '1vEy5cuAkCQChC8R-HlEFLAqvONpC6wH4'
+            },
+            'tiec-chung': {
+                name: 'Tiệc Cưới (Chung)',
+                id: '1PEZRtD9vLmFDFMvPz_mR00gYtWOeFnH8'
+            },
+            'tiec-thanh-ha': {
+                name: 'Tiệc Cưới (GĐ Thanh Hà)',
+                id: '1x8AHzeOKmTB02hV6r6xzxgiLSMfawRK8'
+            },
+            'tiec-ban-be': {
+                name: 'Tiệc Cưới (Bạn bè & Đồng nghiệp)',
+                id: '1pDKWNfXhvAIB894Gc03fU977mpXX8IIN'
+            }
+        },
+
+        // ---- 3 đối tượng ----
+        roles: [
+            {
+                id: 'gd-hoang-phi',
+                label: 'Gia đình Hoàng Phi',
+                desc: 'Chú Rể'
+            },
+            {
+                id: 'gd-thanh-ha',
+                label: 'Gia đình Thanh Hà',
+                desc: 'Cô Dâu'
+            },
+            {
+                id: 'ban-be',
+                label: 'Bạn bè & Đồng nghiệp',
+                desc: 'Cô Dâu & Chú Rể'
+            }
+        ],
+
+        // ---- 2 loại ảnh ----
+        categories: [
+            {
+                id: 'le-cuoi',
+                label: 'Lễ Vu Quy & Thành Hôn',
+                desc: 'Ảnh lễ cưới'
+            },
+            {
+                id: 'tiec-cuoi',
+                label: 'Tiệc Cưới',
+                desc: 'Ảnh tiệc cưới'
+            }
+        ],
+
+        // ---- Mapping: role + category → folders ----
+        folderMapping: {
+            'gd-hoang-phi': {
+                'le-cuoi': ['le-chung', 'le-hoang-phi'],
+                'tiec-cuoi': ['tiec-chung', 'tiec-hoang-phi']
+            },
+            'gd-thanh-ha': {
+                'le-cuoi': ['le-chung', 'le-thanh-ha'],
+                'tiec-cuoi': ['tiec-chung', 'tiec-thanh-ha']
+            },
+            'ban-be': {
+                'le-cuoi': ['le-chung'],
+                'tiec-cuoi': ['tiec-chung', 'tiec-ban-be']
+            }
+        }
+    };
+
+    // ============================================
+    // STATE
+    // ============================================
+    let allPhotos = [];
+    let currentIndex = 0;
+    let selectedRole = null;
+    let selectedCategory = null;
+
+    // ============================================
+    // INITIALIZATION
+    // ============================================
+    function init() {
+        renderRoleCards();
+    }
+
+    // ============================================
+    // BƯỚC 1: CHỌN ĐỐI TƯỢNG
+    // ============================================
+    function renderRoleCards() {
+        const grid = document.getElementById('roleGrid');
+        grid.innerHTML = CONFIG.roles.map(role => `
+            <div class="card" onclick="selectRole('${role.id}')">
+                <div class="card-label">${role.label}</div>
+                <div class="card-desc">${role.desc}</div>
+            </div>
+        `).join('');
+    }
+
+    function selectRole(roleId) {
+        selectedRole = CONFIG.roles.find(r => r.id === roleId);
+        if (!selectedRole) return;
+
+        if (CONFIG.apiKey === 'YOUR_GOOGLE_API_KEY' || !CONFIG.apiKey) {
+            showSetupInstructions();
+            return;
+        }
+        if (window.location.protocol === 'file:') {
+            showFileProtocolWarning();
+            return;
+        }
+
+        showCategoryScreen();
+    }
+
+    // ============================================
+    // BƯỚC 2: CHỌN LOẠI ẢNH
+    // ============================================
+    function showCategoryScreen() {
+        document.getElementById('step-role').classList.add('hidden');
+        const catScreen = document.getElementById('step-category');
+        catScreen.classList.remove('hidden');
+
+        document.getElementById('categoryPrompt').textContent =
+            `${selectedRole.label} — Bạn muốn xem?`;
+
+        const grid = document.getElementById('categoryGrid');
+        grid.innerHTML = CONFIG.categories.map(cat => `
+            <div class="card" onclick="selectCategory('${cat.id}')">
+                <div class="card-label">${cat.label}</div>
+                <div class="card-desc">${cat.desc}</div>
+            </div>
+        `).join('');
+    }
+
+    function selectCategory(catId) {
+        selectedCategory = CONFIG.categories.find(c => c.id === catId);
+        if (!selectedCategory) return;
+        showGallery();
+    }
+
+    function goBackToRole() {
+        document.getElementById('step-category').classList.add('hidden');
+        document.getElementById('step-role').classList.remove('hidden');
+        selectedRole = null;
+    }
+
+    // ============================================
+    // BƯỚC 3: GALLERY
+    // ============================================
+    function showGallery() {
+        document.getElementById('step-category').classList.add('hidden');
+        const gallery = document.getElementById('gallery');
+        gallery.classList.add('visible');
+        document.getElementById('galleryTitle').textContent = selectedCategory.label;
+        loadPhotos();
+    }
+
+    function goBackToCategory() {
+        const gallery = document.getElementById('gallery');
+        gallery.classList.remove('visible');
+        allPhotos = [];
+        document.getElementById('galleryContent').innerHTML = '';
+        document.getElementById('photoCount').textContent = '';
+
+        setTimeout(() => {
+            document.getElementById('step-category').classList.remove('hidden');
+        }, 100);
+    }
+
+    // ============================================
+    // GOOGLE DRIVE API
+    // ============================================
+    async function fetchFolderImages(folderId) {
+        const query = `'${folderId}' in parents and mimeType contains 'image/'`;
+        const params = new URLSearchParams({
+            q: query,
+            key: CONFIG.apiKey,
+            fields: 'files(id,name,mimeType)',
+            pageSize: '1000',
+            orderBy: 'name'
+        });
+        const url = `https://www.googleapis.com/drive/v3/files?${params}`;
+
+        console.log('Fetching folder:', folderId);
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.error('API Error:', data);
+            throw new Error(data.error?.message || `HTTP ${response.status}`);
+        }
+
+        console.log(`Found ${(data.files||[]).length} images`);
+        return data.files || [];
+    }
+
+    function getThumbnailUrl(fileId, width = 400) {
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${width}`;
+    }
+
+    function getFullUrl(fileId) {
+        return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
+    }
+
+    function getDownloadUrl(fileId) {
+        return `https://drive.google.com/uc?export=download&id=${fileId}`;
+    }
+
+    // ============================================
+    // LOAD & RENDER PHOTOS
+    // ============================================
+    async function loadPhotos() {
+        const content = document.getElementById('galleryContent');
+        allPhotos = [];
+
+        content.innerHTML = `
+            <div class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Đang tải ảnh...</p>
+            </div>
+        `;
+
+        try {
+            const folderKeys = CONFIG.folderMapping[selectedRole.id][selectedCategory.id];
+            let html = '';
+            let totalCount = 0;
+
+            for (const key of folderKeys) {
+                const folder = CONFIG.folders[key];
+                if (!folder) continue;
+
+                const files = await fetchFolderImages(folder.id);
+                if (files.length === 0) continue;
+
+                const startIdx = allPhotos.length;
+                files.forEach(f => allPhotos.push(f));
+                totalCount += files.length;
+
+                html += `
+                    <section class="folder-section">
+                        <h2 class="folder-heading">${folder.name}</h2>
+                        <div class="photo-grid">
+                            ${files.map((file, i) => `
+                                <div class="photo-item" onclick="openLightbox(${startIdx + i})">
+                                    <img
+                                        src="${getThumbnailUrl(file.id, 500)}"
+                                        alt="${file.name}"
+                                        loading="lazy"
+                                        onload="this.classList.add('loaded')"
+                                        onerror="this.parentElement.style.display='none'"
+                                    >
+                                </div>
+                            `).join('')}
+                        </div>
+                    </section>
+                `;
+            }
+
+            if (totalCount === 0) {
+                content.innerHTML = `
+                    <div class="loading-container">
+                        <p class="loading-text">Chưa có ảnh nào trong album này.</p>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = html;
+                document.getElementById('photoCount').textContent = `${totalCount} ảnh`;
+            }
+
+        } catch (err) {
+            content.innerHTML = `
+                <div class="error-container">
+                    <h3>Không thể tải ảnh</h3>
+                    <p>${err.message}</p>
+                    <p style="margin-top:16px">Hãy kiểm tra: API Key, quyền chia sẻ thư mục Google Drive, và Google Drive API đã bật.</p>
+                </div>
+            `;
+        }
+    }
+
+    // ============================================
+    // LIGHTBOX
+    // ============================================
+    function openLightbox(index) {
+        currentIndex = index;
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+        const spinner = document.getElementById('lightboxSpinner');
+
+        img.classList.remove('loaded');
+        spinner.style.display = 'block';
+
+        const photo = allPhotos[index];
+        img.src = getFullUrl(photo.id);
+        img.onload = () => {
+            img.classList.add('loaded');
+            spinner.style.display = 'none';
+        };
+
+        // Update download link
+        document.getElementById('lightboxDownload').href = getDownloadUrl(photo.id);
+
+        updateLightboxCounter();
+        lightbox.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(event) {
+        if (event && event.target !== event.currentTarget &&
+            !event.target.classList.contains('lightbox-close')) return;
+
+        document.getElementById('lightbox').classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(direction) {
+        currentIndex += direction;
+        if (currentIndex < 0) currentIndex = allPhotos.length - 1;
+        if (currentIndex >= allPhotos.length) currentIndex = 0;
+
+        const img = document.getElementById('lightboxImg');
+        const spinner = document.getElementById('lightboxSpinner');
+
+        img.classList.remove('loaded');
+        spinner.style.display = 'block';
+
+        const photo = allPhotos[currentIndex];
+        img.src = getFullUrl(photo.id);
+        img.onload = () => {
+            img.classList.add('loaded');
+            spinner.style.display = 'none';
+        };
+
+        document.getElementById('lightboxDownload').href = getDownloadUrl(photo.id);
+        updateLightboxCounter();
+    }
+
+    function updateLightboxCounter() {
+        document.getElementById('lightboxCounter').textContent =
+            `${currentIndex + 1} / ${allPhotos.length}`;
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        const lightbox = document.getElementById('lightbox');
+        if (!lightbox.classList.contains('visible')) return;
+
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(1);
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.getElementById('lightbox').addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.getElementById('lightbox').addEventListener('touchend', (e) => {
+        const diff = e.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(diff) > 60) navigateLightbox(diff > 0 ? -1 : 1);
+    }, { passive: true });
+
+    // ============================================
+    // WARNING SCREENS
+    // ============================================
+    function showFileProtocolWarning() {
+        document.getElementById('step-role').innerHTML = `
+            <div class="setup-screen">
+                <h2>Không thể mở từ file cục bộ</h2>
+                <p>Trình duyệt chặn API khi mở file trực tiếp (file://). Bạn cần host website.</p>
+                <p style="margin-top:24px"><strong>Cách 1 — Deploy lên GitHub Pages:</strong></p>
+                <ol>
+                    <li>Tạo repository mới trên <a href="https://github.com/new" target="_blank">GitHub</a></li>
+                    <li>Upload file <code>index.html</code></li>
+                    <li>Settings → Pages → Branch: main → Save</li>
+                </ol>
+                <p style="margin-top:16px"><strong>Cách 2 — Test nhanh:</strong></p>
+                <p style="background:#f0f0f0;padding:12px;border-radius:8px;font-family:monospace;margin-top:8px;">python -m http.server 8000</p>
+                <p style="margin-top:8px">Rồi mở <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
+            </div>
+        `;
+    }
+
+    function showSetupInstructions() {
+        document.getElementById('step-role').innerHTML = `
+            <div class="setup-screen">
+                <h2>Cần cấu hình API Key</h2>
+                <p>Để website đọc ảnh từ Google Drive, cần tạo Google API Key miễn phí.</p>
+                <ol>
+                    <li>Truy cập <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a></li>
+                    <li>Tạo Project → bật <strong>Google Drive API</strong></li>
+                    <li>Tạo API Key → dán vào <code>CONFIG.apiKey</code> trong file index.html</li>
+                    <li>Chia sẻ thư mục Drive: <strong>Anyone with the link → Viewer</strong></li>
+                </ol>
+            </div>
+        `;
+    }
+
+    // ============================================
+    // START
+    // ============================================
+    init();
+    </script>
+</body>
+</html>
